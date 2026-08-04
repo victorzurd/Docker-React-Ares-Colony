@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: ares_postgres
+    environment:
+      POSTGRES_DB: ares_colony_db
+      POSTGRES_USER: astronauta
+      POSTGRES_PASSWORD: marte_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  cerebro-python:
+    build: ClimaService
+    container_name: cerebro_python
+    ports:
+      - "5000:5000"
+
+  hub-java:
+    build: hubBackEnd
+    container_name: hub_java
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/ares_colony_db
+    depends_on:
+      - postgres-db
+      - cerebro-python
+
+  dashboard-frontend:
+    build: dashboard-frontend
+    container_name: dashboard_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - hub-java
+
+volumes:
+  postgres_data:
