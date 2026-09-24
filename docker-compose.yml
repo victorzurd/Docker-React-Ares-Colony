@@ -20,7 +20,7 @@ services:
       - "5000:5000"
 
   hub-java:
-    build: hubBackEnd
+    build: HubBackEnd
     container_name: hub_java
     ports:
       - "8080:8080"
