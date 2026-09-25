@@ -1,10 +1,53 @@
-# Ares Colony · Mission Control Platform
+<div align="center">
 
-Plataforma de monitorización para una colonia en Marte, construida como una arquitectura de **microservicios contenerizados**. Un backend en **Spring Boot** persiste los datos de los colonos en **PostgreSQL** y emite telemetría ambiental en tiempo real por **WebSocket (STOMP)** hacia un panel de control en **React**; un servicio analítico en **FastAPI** calcula el riesgo de tormenta de arena de una misión. Todo el entorno se levanta con un solo comando mediante **Docker Compose**.
+# 🔴 Ares Colony
+
+### Mission Control Platform
+
+**El centro de operaciones de una colonia marciana, construido con microservicios y listo para despegar.**
+
+<p>
+  <a href="https://github.com/victorzurd/Docker-React-Ares-Colony"><img src="https://img.shields.io/badge/status-prototipo-orange?style=for-the-badge" alt="Estado: prototipo"></a>
+  <img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 21">
+  <img src="https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 18">
+  <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Compose">
+</p>
+
+<p>
+  <a href="#puesta-en-marcha">Puesta en marcha</a> ·
+  <a href="#arquitectura">Arquitectura</a> ·
+  <a href="#api-y-telemetria">API y telemetría</a> ·
+  <a href="#limitaciones-conocidas">Limitaciones</a>
+</p>
+
+</div>
+
+> Plataforma de monitorización para una colonia en Marte. Spring Boot persiste los colonos en PostgreSQL y emite telemetría ambiental en tiempo real por WebSocket (STOMP) hacia un dashboard React; FastAPI calcula el riesgo de tormenta de arena de cada misión.
+
+<div align="center">
+
+| 🖥️ Dashboard | ⚡ Tiempo real | 🧠 Análisis | 🐳 Un comando |
+| :---: | :---: | :---: | :---: |
+| React + Vite | WebSocket / STOMP | FastAPI | Docker Compose |
+
+</div>
+
+## 🧭 Índice
+
+- [✨ Qué incluye](#que-incluye)
+- [🧰 Stack tecnológico](#stack-tecnologico)
+- [🏗️ Arquitectura](#arquitectura)
+- [🚀 Puesta en marcha](#puesta-en-marcha)
+- [⚙️ Configuración](#configuracion)
+- [🔌 API y telemetría](#api-y-telemetria)
+- [🛠️ Desarrollo local](#desarrollo-local)
+- [⚠️ Limitaciones conocidas](#limitaciones-conocidas)
 
 ---
 
-## 1. Características principales
+<a id="que-incluye"></a>
+
+## ✨ Qué incluye
 
 - **Telemetría en tiempo real (push)**: el backend publica cada 2 segundos oxígeno, presión, temperatura exterior y radiación en el canal `/topic/telemetry`; el dashboard se actualiza sin *polling*.
 - **Dashboard de control de misión** (React + Tailwind): cuatro tarjetas de métricas e indicador de estado de conexión con reconexión automática (5 s).
@@ -17,7 +60,9 @@ Plataforma de monitorización para una colonia en Marte, construida como una arq
 
 ---
 
-## 2. Tecnologías utilizadas
+<a id="stack-tecnologico"></a>
+
+## 🧰 Stack tecnológico
 
 | Capa | Tecnologías |
 | :--- | :--- |
@@ -30,7 +75,7 @@ Plataforma de monitorización para una colonia en Marte, construida como una arq
 
 ---
 
-## 3. Estructura del proyecto
+## 📁 Estructura del proyecto
 
 ```text
 Docker-React-Ares-Colony/
@@ -65,7 +110,9 @@ Docker-React-Ares-Colony/
     └── Dockerfile
 ```
 
-### Arquitectura
+<a id="arquitectura"></a>
+
+## 🏗️ Arquitectura
 
 ```mermaid
 flowchart LR
@@ -81,9 +128,11 @@ flowchart LR
 
 ---
 
-## 4. Requisitos previos e Instalación
+<a id="puesta-en-marcha"></a>
 
-### Requisitos
+## 🚀 Puesta en marcha
+
+### Requisitos previos
 
 | Modo | Necesitas |
 | :--- | :--- |
@@ -92,7 +141,7 @@ flowchart LR
 
 Puertos libres en el host: `3000`, `5000`, `5432` y `8080`.
 
-### Opción A: Docker Compose (recomendada)
+### Opción A · Docker Compose (recomendada)
 
 ```bash
 # 1. Clonar el repositorio
@@ -123,7 +172,9 @@ docker compose down        # detiene y elimina los contenedores (conserva los da
 docker compose down -v     # además elimina el volumen de PostgreSQL (borra los datos)
 ```
 
-### Opción B: Desarrollo local por servicios
+<a id="opcion-b-desarrollo-local"></a>
+
+### Opción B · Desarrollo local por servicios
 
 Ejecuta cada componente en una terminal distinta.
 
@@ -171,7 +222,9 @@ npm run dev                          # http://localhost:3000
 
 ---
 
-## 5. Variables de entorno
+<a id="configuracion"></a>
+
+## ⚙️ Configuración
 
 El proyecto **no utiliza ficheros `.env`**. La configuración se define en `docker-compose.yml` y en `HubBackEnd/src/main/resources/application.properties`.
 
@@ -206,13 +259,15 @@ Cualquier propiedad de Spring puede sobrescribirse mediante variables de entorno
 
 ---
 
-## 6. Ejemplo de uso / Endpoints API
+<a id="api-y-telemetria"></a>
 
-### 6.1. Dashboard
+## 🔌 API y telemetría
+
+### Dashboard
 
 Abre **http://localhost:3000**. El indicador superior pasa a `ONLINE (WS)` al conectar con el backend y las cuatro tarjetas (oxígeno, presión, temperatura exterior y radiación) se actualizan cada 2 segundos.
 
-### 6.2. API REST: Hub (`http://localhost:8080`)
+### API REST · Hub (`http://localhost:8080`)
 
 | Método | Ruta | Descripción |
 | :--- | :--- | :--- |
@@ -247,7 +302,7 @@ curl -X POST http://localhost:8080/api/colonos \
 }
 ```
 
-### 6.3. Telemetría en tiempo real: WebSocket / STOMP
+### Telemetría en tiempo real · WebSocket / STOMP
 
 | Elemento | Valor |
 | :--- | :--- |
@@ -290,7 +345,7 @@ const client = new Client({
 client.activate();
 ```
 
-### 6.4. API REST: Servicio analítico (`http://localhost:5000`)
+### API REST · Servicio analítico (`http://localhost:5000`)
 
 | Método | Ruta | Descripción |
 | :--- | :--- | :--- |
@@ -314,11 +369,30 @@ curl -X POST http://localhost:5000/analizar-riesgo \
 
 ---
 
-## 7. Limitaciones conocidas
+<a id="desarrollo-local"></a>
+
+## 🛠️ Desarrollo local
+
+Los comandos completos para ejecutar cada servicio sin Docker están documentados en [Opción B · Desarrollo local por servicios](#opcion-b-desarrollo-local). Para el frontend:
+
+```bash
+cd dashboard-frontend
+npm install
+npm run dev
+```
+
+Para validar el build de producción del dashboard:
+
+```bash
+npm run build
+```
+
+<a id="limitaciones-conocidas"></a>
+
+## ⚠️ Limitaciones conocidas
 
 Aspectos detectados durante el análisis estático del código (no se ha ejecutado el stack completo):
 
-- **Nombre de directorio en el compose**: `docker-compose.yml` usa `build: hubBackEnd`, pero el directorio se llama `HubBackEnd`. En sistemas de archivos con distinción de mayúsculas (Linux) el build falla; en Windows y macOS funciona.
 - **Arranque no sincronizado**: `depends_on` solo espera al *inicio* del contenedor de PostgreSQL, no a que acepte conexiones (no hay `healthcheck`). El backend puede fallar en el primer arranque; en ese caso, vuelve a ejecutar `docker compose up`.
 - **Integración Hub ↔ Python pendiente**: el backend instancia un `RestClient` hacia `cerebro-python`, pero ningún endpoint lo invoca; el dashboard tampoco consume la API REST ni el servicio de riesgo.
 - **Telemetría simulada**: los valores son aleatorios y no se persisten ni se asocian a colonos.
